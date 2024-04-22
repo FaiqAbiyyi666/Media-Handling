@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+</head>
+
+<body>
+    <h1>Upload Single Image</h1>
+    <form action="/api/v1/upload/image" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="image">Image File:</label>
+            <br>
+            <input type="file" name="image">
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+    <h1>Upload Multiple Image</h1>
+    <form action="/api/v1/upload/images" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="image">Image File:</label>
+            <br>
+            <input type="file" name="image" multiple>
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+
+</body>
+
+</html>

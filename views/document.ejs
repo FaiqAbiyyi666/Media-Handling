@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Audio</title>
+</head>
+
+<body>
+    <h1>Upload Single Document</h1>
+    <form action="/api/v1/upload/document" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="document">Document File:</label>
+            <br>
+            <input type="file" name="document">
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+    <h1>Upload Multiple Document</h1>
+    <form action="/api/v1/upload/documents" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="document">Document File:</label>
+            <br>
+            <input type="file" name="document" multiple>
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+
+</body>
+
+</html>

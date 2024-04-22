@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video</title>
+</head>
+
+<body>
+    <h1>Upload Single Video</h1>
+    <form action="/api/v1/upload/video" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="video">Video File:</label>
+            <br>
+            <input type="file" name="video">
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+    <h1>Upload Multiple Video</h1>
+    <form action="/api/v1/upload/videos" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="video">Video File:</label>
+            <br>
+            <input type="file" name="video" multiple>
+        </div>
+        <br>
+        <button type="submit">Upload Now</button>
+    </form>
+
+</body>
+
+</html>
