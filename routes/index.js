@@ -1,9 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { image, video, document } = require("../libs/multer");
+const {
+  imageStorage,
+  videoStorage,
+  documentStorage,
+  image,
+  video,
+  document,
+} = require("../libs/multer");
 
 // Single Images
-router.post("/upload/image", image.single("image"), (req, res) => {
+router.post("/upload/image", imageStorage.single("image"), (req, res) => {
   let imageUrl = `${req.protocol}://${req.get("host")}/images/${
     req.file.filename
   }`;
@@ -14,7 +21,7 @@ router.post("/upload/image", image.single("image"), (req, res) => {
 });
 
 // Multiple Images
-router.post("/upload/images", image.array("image"), (req, res) => {
+router.post("/upload/images", imageStorage.array("image"), (req, res) => {
   let imagesUrl = req.files.map((file) => {
     return `${req.protocol}://${req.get("host")}/images/${file.filename}`;
   });
@@ -22,7 +29,7 @@ router.post("/upload/images", image.array("image"), (req, res) => {
 });
 
 // single video (mp4, mpeg, mov)
-router.post("/upload/video", video.single("video"), (req, res) => {
+router.post("/upload/video", videoStorage.single("video"), (req, res) => {
   let videoUrl = `${req.protocol}://${req.get("host")}/videos/${
     req.file.filename
   }`;
@@ -30,7 +37,7 @@ router.post("/upload/video", video.single("video"), (req, res) => {
 });
 
 // multiple video
-router.post("/upload/videos", video.array("video"), (req, res) => {
+router.post("/upload/videos", videoStorage.array("video"), (req, res) => {
   let videosUrl = req.files.map((file) => {
     return `${req.protocol}://${req.get("host")}/videos/${file.filename}`;
   });
@@ -38,19 +45,44 @@ router.post("/upload/videos", video.array("video"), (req, res) => {
 });
 
 // single document (mp3, mp4 audio)
-router.post("/upload/document", document.single("document"), (req, res) => {
-  let documentUrl = `${req.protocol}://${req.get("host")}/documents/${
-    req.file.filename
-  }`;
-  res.render("uploadedDocument", { document_url: documentUrl });
-});
+router.post(
+  "/upload/document",
+  documentStorage.single("document"),
+  (req, res) => {
+    let documentUrl = `${req.protocol}://${req.get("host")}/documents/${
+      req.file.filename
+    }`;
+    res.render("uploadedDocument", { document_url: documentUrl });
+  }
+);
 
 // multiple document
-router.post("/upload/documents", document.array("document"), (req, res) => {
-  let documentsUrl = req.files.map((file) => {
-    return `${req.protocol}://${req.get("host")}/documents/${file.filename}`;
-  });
-  res.json({ documents_url: documentsUrl });
-});
+router.post(
+  "/upload/documents",
+  documentStorage.array("document"),
+  (req, res) => {
+    let documentsUrl = req.files.map((file) => {
+      return `${req.protocol}://${req.get("host")}/documents/${file.filename}`;
+    });
+    res.json({ documents_url: documentsUrl });
+  }
+);
+
+const {
+  imageKitUpload,
+  generateQR,
+} = require("../controllers/media.controllers");
+
+router.post("/imagekit/upload/image", image.single("file"), imageKitUpload);
+
+router.post(
+  "/imagekit/upload/document",
+  document.single("file"),
+  imageKitUpload
+);
+
+router.post("/imagekit/upload/video", video.single("file"), imageKitUpload);
+
+router.post("/qr/generate", generateQR);
 
 module.exports = router;

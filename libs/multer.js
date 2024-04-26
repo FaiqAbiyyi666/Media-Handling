@@ -15,56 +15,80 @@ const generateStorage = (destination) => {
   });
 };
 
+const generateFileFilter = (mimetypes, maxFileSize) => {
+  return (req, file, callback) => {
+    const fileSize = parseInt(req.headers[`content-length`]);
+    // const maxFileSize = null;
+    if (fileSize > maxFileSize) {
+      const err = new Error(`Maximum file size 1MB!`);
+      return callback(err, false);
+    }
+    if (mimetypes.includes(file.mimetype)) {
+      callback(null, true);
+    } else {
+      let err = new Error(`Only ${mimetypes} are allowed to upload!`);
+      callback(err, false);
+    }
+  };
+};
+
 module.exports = {
-  image: multer({
+  imageStorage: multer({
     storage: generateStorage("./public/images"),
-    fileFilter: (req, file, callback) => {
-      let allowedMimetypes = ["image/png", "image/jpg", "image/jpeg"];
-      if (allowedMimetypes.includes(file.mimetype)) {
-        callback(null, true);
-      } else {
-        let err = new Error(`Only ${allowedMimetypes} are allowed to upload!`);
-        callback(err, false);
-      }
-    },
+    fileFilter: generateFileFilter(["image/png", "image/jpg", "image/jpeg"]),
     onError: (err, next) => {
       next(err);
     },
   }),
 
-  video: multer({
+  videoStorage: multer({
     storage: generateStorage("./public/videos"),
-    fileFilter: (req, file, callback) => {
-      let allowedMimetypes = ["video/mp4", "video/mpeg", "video/mpkg"];
-      if (allowedMimetypes.includes(file.mimetype)) {
-        callback(null, true);
-      } else {
-        let err = new Error(`Only ${allowedMimetypes} are allowed to upload!`);
-        callback(err, false);
-      }
+    fileFilter: generateFileFilter(["video/mp4", "video/mpeg", "video/webm"]),
+    onError: (err, next) => {
+      next(err);
     },
+  }),
+
+  documentStorage: multer({
+    storage: generateStorage("./public/documents"),
+    fileFilter: generateFileFilter([
+      "application/pdf",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ]),
+    onError: (err, next) => {
+      next(err);
+    },
+  }),
+
+  image: multer({
+    fileFilter: generateFileFilter(
+      ["image/png", "image/jpg", "image/jpeg"],
+      1000000
+    ),
     onError: (err, next) => {
       next(err);
     },
   }),
 
   document: multer({
-    storage: generateStorage("./public/documents"),
-    fileFilter: (req, file, callback) => {
-      let allowedMimetypes = [
-        "application/pdf",
-        "application/vnd.ms-excel",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
-      if (allowedMimetypes.includes(file.mimetype)) {
-        callback(null, true);
-      } else {
-        let err = new Error(`Only ${allowedMimetypes} are allowed to upload!`);
-        callback(err, false);
-      }
+    fileFilter: generateFileFilter([
+      "text/plain",
+      "application/pdf",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ]),
+    onError: (err, next) => {
+      next(err);
     },
+  }),
+
+  video: multer({
+    fileFilter: generateFileFilter(["video/mp4", "video/mpeg"]),
     onError: (err, next) => {
       next(err);
     },
